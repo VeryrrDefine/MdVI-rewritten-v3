@@ -14,7 +14,7 @@ let FORMAT_DEBUG = 0
 let MAX_LOGP1_REPEATS = 48
 export type OmegaNumSource = string | number | OmegaNum
 
-function commaFormat(num : OmegaNum, precision : number):string {
+function commaFormat(num : OmegaNum, precision : number = 4):string {
     if (num === null || num === undefined) return "NaN"
     let zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
@@ -24,7 +24,7 @@ function commaFormat(num : OmegaNum, precision : number):string {
     return portions[0]
 }
 
-function regularFormat(num : OmegaNum, precision : number):string {
+function regularFormat(num : OmegaNum, precision : number = 4):string {
     if (isNaN(num)) return "NaN"
     let zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
@@ -89,7 +89,7 @@ function polarize(array, smallTop=false) {
     return {bottom: bottom, top: top, height: height}
 }
 
-export function format(num : OmegaNum, precision=2,  small=false):string {
+export function format(num : OmegaNum, precision:number=4,  small=false):string {
     if (OmegaNum.isNaN(num)) return "NaN"
     let precision2 = Math.max(3, precision) // for e
     let precision3 = Math.max(4, precision) // for F, G, H
@@ -165,6 +165,6 @@ export function formatWhole(num:OmegaNum):string {
     return format(num, 0)
 }
 
-export function formatSmall(num: OmegaNum, precision=2):string { 
+export function formatSmall(num: OmegaNum, precision:number=4):string { 
     return format(num, precision, true)    
 }
