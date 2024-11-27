@@ -12,9 +12,13 @@ let FORMAT_DEBUG = 0
 // indistinguishable from 1. I calculated it myself and got 45, though I set it to 48 to be safe.
 // Reducing this will speed up formatting, but may lead to inaccurate results.
 let MAX_LOGP1_REPEATS = 48
-export type OmegaNumSource = string | number | OmegaNum
 
-function commaFormat(num : OmegaNum, precision : number = 4):string {
+export interface omeganumarray {
+    0: number,
+    1: number
+}
+
+function commaFormat(num : any, precision : number = 4):string {
     if (num === null || num === undefined) return "NaN"
     let zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
@@ -24,7 +28,7 @@ function commaFormat(num : OmegaNum, precision : number = 4):string {
     return portions[0]
 }
 
-function regularFormat(num : OmegaNum, precision : number = 4):string {
+function regularFormat(num : any, precision : number = 4):string {
     if (isNaN(num)) return "NaN"
     let zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
@@ -38,7 +42,7 @@ function regularFormat(num : OmegaNum, precision : number = 4):string {
 
 // Basically does the opposite of what standardize in OmegaNum does
 // Set smallTop to true to force the top value in the result below 10
-function polarize(array, smallTop=false) {
+function polarize(array: any, smallTop=false) {
     if (FORMAT_DEBUG >= 1) console.log("Begin polarize: "+JSON.stringify(array)+", smallTop "+smallTop)
     if (array.length == 0) array = [0]
     
@@ -69,7 +73,7 @@ function polarize(array, smallTop=false) {
                     if (bottom >= 1e10) bottom = Math.log10(Math.log10(Math.log10(bottom))) + 2
                     else bottom = Math.log10(Math.log10(bottom)) + 1
                     // Apply the remaining increments
-                    for (i=2;i<height;i++) bottom = Math.log10(bottom) + 1
+                    for (let i=2;i<height;i++) bottom = Math.log10(bottom) + 1
                 }
                 else bottom = 1 // The increment result is indistinguishable from 1
                 
@@ -89,7 +93,7 @@ function polarize(array, smallTop=false) {
     return {bottom: bottom, top: top, height: height}
 }
 
-export function format(num : OmegaNum, precision:number=4,  small=false):string {
+export function format(num : any, precision:number=4,  small=false):string {
     if (OmegaNum.isNaN(num)) return "NaN"
     let precision2 = Math.max(3, precision) // for e
     let precision3 = Math.max(4, precision) // for F, G, H
@@ -161,10 +165,10 @@ export function format(num : OmegaNum, precision:number=4,  small=false):string 
     return regularFormat(Math.log10(pol.bottom) + pol.top, precision4) + "J" + commaFormat(pol.height)
 }
 
-export function formatWhole(num:OmegaNum):string {
+export function formatWhole(num: any):string {
     return format(num, 0)
 }
 
-export function formatSmall(num: OmegaNum, precision:number=4):string { 
+export function formatSmall(num: any, precision:number=4):string { 
     return format(num, precision, true)    
 }

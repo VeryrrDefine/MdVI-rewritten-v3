@@ -16,10 +16,12 @@ createApp(App).mount('#app')
 load();
 startLoops();
 
+/*
 window.player = player;
 window.OmegaNum = OmegaNum;
 window.format = format;
 window.formatSmall = formatSmall;
 window.formatWhole = formatWhole;
+*/
 
 Events.on(EVENT.SAVE_GAME, save);

@@ -19,7 +19,11 @@ textslength = texts.length;
 let rand;
 var updatenews = function () {
     let e = document.getElementById("newsText")
-    if (e==null) return;
+    if (e==null || e.parentElement==null){
+        setTimeout(updatenews, 1000)
+        return;
+
+    };
     /*  */
     //if (!player.options.showNewsTicker) return
     do {
@@ -45,7 +49,8 @@ var updatenews = function () {
 }
 var onNewsEnd = function () {
     let e = document.getElementById("newsText");
-    e.removeEventListener('transitionend', onNewsEnd)
+    if (e!==null)
+        e.removeEventListener('transitionend', onNewsEnd)
     setTimeout(updatenews, 1000)
 }
 function checkRand(rand:number) {
