@@ -8,10 +8,12 @@ export const startLoops = () => {
 
         Events.dispatch(EVENT.GAME_TICK, diff);
 
+        player.randomer = Math.random().toString().slice(1,3);
+
         player.lastTick = now;
     };
 
     setInterval(loop, 30);
     setInterval(() => Events.dispatch(EVENT.LONG_UPDATE), 1000);
-    setInterval(() => Events.dispatch(EVENT.SAVE_GAME), 10000);
+    setInterval(() => Events.dispatch(EVENT.SAVE_GAME), 3000);
 };

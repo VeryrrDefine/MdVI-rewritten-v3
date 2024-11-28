@@ -7,6 +7,7 @@ export const initialPlayer = () => ({
 
     lastTick: Date.now(),
     currentPage: 1,
+    randomer: "dygm"
 });
 
 export type Player = ReturnType<typeof initialPlayer>;
