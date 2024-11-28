@@ -6,12 +6,12 @@ import OmegaNum from 'omega_num.js';
 // in turn based on The Prestige Tree by Jacorb and Aarex
 
 // Set to 1 to print debug information to console
-let FORMAT_DEBUG = 0
+const FORMAT_DEBUG = 0
 
 // Maximum number of times you can apply 1+log10(x) to number < 10 until the result is
 // indistinguishable from 1. I calculated it myself and got 45, though I set it to 48 to be safe.
 // Reducing this will speed up formatting, but may lead to inaccurate results.
-let MAX_LOGP1_REPEATS = 48
+const MAX_LOGP1_REPEATS = 48
 
 export interface omeganumarray {
     0: number,
@@ -20,20 +20,20 @@ export interface omeganumarray {
 
 function commaFormat(num : any, precision : number = 4):string {
     if (num === null || num === undefined) return "NaN"
-    let zeroCheck = num.array ? num.array[0] : num
+    const zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
-    let init = num.toString()
-    let portions = init.split(".")
+    const init = num.toString()
+    const portions = init.split(".")
     portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
     return portions[0]
 }
 
 function regularFormat(num : any, precision : number = 4):string {
     if (isNaN(num)) return "NaN"
-    let zeroCheck = num.array ? num.array[0] : num
+    const zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
-    let fmt = num.toString()
-    let f = fmt.split(".")
+    const fmt = num.toString()
+    const f = fmt.split(".")
     if (precision == 0) return commaFormat(num.floor ? num.floor() : Math.floor(num))
     else if (f.length == 1) return fmt + "." + "0".repeat(precision)
     else if (f[1].length < precision) return fmt + "0".repeat(precision - f[1].length)
@@ -95,11 +95,11 @@ function polarize(array: any, smallTop=false) {
 
 export function format(num : any, precision:number=4,  small=false):string {
     if (OmegaNum.isNaN(num)) return "NaN"
-    let precision2 = Math.max(3, precision) // for e
-    let precision3 = Math.max(4, precision) // for F, G, H
-    let precision4 = Math.max(6, precision) // for J
+    const precision2 = Math.max(3, precision) // for e
+    const precision3 = Math.max(4, precision) // for F, G, H
+    const precision4 = Math.max(6, precision) // for J
     num = new OmegaNum(num)
-    let array = num.array
+    const array = num.array
     if (num.abs().lt(1e-308)) return (0).toFixed(precision)
     if (num.sign < 0) return "-" + format(num.neg(), precision)
     if (num.isInfinite()) return "Infinity"
@@ -113,18 +113,18 @@ export function format(num : any, precision:number=4,  small=false):string {
             array[0] = Math.log10(array[0])
             rep += 1
         }
-        let m = 10**(array[0]-Math.floor(array[0]))
-        let e = Math.floor(array[0])
-        let p = array[0] < 1000 ? precision2 : 0
+        const m = 10**(array[0]-Math.floor(array[0]))
+        const e = Math.floor(array[0])
+        const p = array[0] < 1000 ? precision2 : 0
         return "e".repeat(rep) + regularFormat(m, p) + "e" + commaFormat(e)
     }
     else if (num.lt("10^^1000000")) { // 1F5 ~ F1,000,000
-        let pol = polarize(array)
+        const pol = polarize(array)
         return regularFormat(pol.bottom, precision3) + "F" + commaFormat(pol.top)
     }
     else if (num.lt("10^^^5")) { // F1,000,000 ~ 1G5
         if ((array[2]||0) >= 1) {
-            let rep = array[2]
+            const rep = array[2]
             array[2] = 0
             return "F".repeat(rep) + format(array, precision)
         }
@@ -133,12 +133,12 @@ export function format(num : any, precision:number=4,  small=false):string {
         return "F" + format(n, precision)
     }
     else if (num.lt("10^^^1000000")) { // 1G5 ~ G1,000,000
-        let pol = polarize(array)
+        const pol = polarize(array)
         return regularFormat(pol.bottom, precision3) + "G" + commaFormat(pol.top)
     }
     else if (num.lt("10^^^^5")) { // G1,000,000 ~ 1H5
         if ((array[3]||0) >= 1) {
-            let rep = array[3]
+            const rep = array[3]
             array[3] = 0
             return "G".repeat(rep) + format(array, precision)
         }
@@ -147,12 +147,12 @@ export function format(num : any, precision:number=4,  small=false):string {
         return "G" + format(n, precision)
     }
     else if (num.lt("10^^^^1000000")) { // 1H5 ~ H1,000,000
-        let pol = polarize(array)
+        const pol = polarize(array)
         return regularFormat(pol.bottom, precision3) + "H" + commaFormat(pol.top)
     }
     else if (num.lt("10^^^^^5")) { // H1,000,000 ~ 5J4
         if ((array[4]||0) >= 1) {
-            let rep = array[4]
+            const rep = array[4]
             array[4] = 0
             return "H".repeat(rep) + format(array, precision)
         }
@@ -161,7 +161,7 @@ export function format(num : any, precision:number=4,  small=false):string {
         return "H" + format(n, precision)
     }
     // 5J4 and beyond
-    let pol = polarize(array, true)
+    const pol = polarize(array, true)
     return regularFormat(Math.log10(pol.bottom) + pol.top, precision4) + "J" + commaFormat(pol.height)
 }
 

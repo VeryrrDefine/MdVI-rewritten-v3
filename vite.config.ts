@@ -8,11 +8,15 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 export default defineConfig({
   plugins: [
     vue(),
-    vueJsx(),
+    vueJsx()
   ],
+  base: "./",
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    sourcemap: true
   }
 })

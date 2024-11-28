@@ -14,7 +14,7 @@ function isOmegaNumObject(object: any){
 
 function transformToO (object : any) {
     
-    for(let key in object) {
+    for(const key in object) {
         if(isOmegaNumObject(object[key])) {
             object[key] = new OmegaNum(object[key]);
         }
@@ -26,7 +26,7 @@ function transformToO (object : any) {
 }
 
 function deepCopyProps(source : any,target : any) {
-    for (let key in source) {  
+    for (const key in source) {  
         if (source.hasOwnProperty(key)) {  
             // 如果源对象的属性是对象或数组，则递归复制  
             if ((typeof source[key] === 'object' && !(source[key] instanceof OmegaNum)) && source[key] !== null) {  
