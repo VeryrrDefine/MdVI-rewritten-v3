@@ -7,7 +7,11 @@ export const initialPlayer = () => ({
 
     lastTick: Date.now(),
     currentPage: 1,
-    randomer: "dygm"
+    randomer: "把河列啊？",
+    dimensions: {
+        amounts: [...Array(8).fill(DC.D0)],
+        bought: [...Array(8).fill(DC.D0)],
+    }
 });
 
 export type Player = ReturnType<typeof initialPlayer>;

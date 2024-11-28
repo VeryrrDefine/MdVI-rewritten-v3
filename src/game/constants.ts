@@ -17,6 +17,10 @@ export const DC = deepFreeze({
     // Fyyy:10^^yyy
     // if variable starts at a number, using D
     D0:                     new OmegaNum(0),
-    D7:                     new OmegaNum(7)
+    D1:                     new OmegaNum(1),
+    D2:                     new OmegaNum(2),
+    D7:                     new OmegaNum(7),
+    D10:                    new OmegaNum(10),
+    POSITIVE_INFINITY:      new OmegaNum(Infinity),
 
 });
