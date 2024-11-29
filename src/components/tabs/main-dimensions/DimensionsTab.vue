@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { getDimensionsMultiplier, getDimensionsAmount, getDimensionsCost, buyable, buyDimensions } from '../../../game/dimensions/dimensions';
-import { usePlayerData } from '../../../lib/composables/usePlayerData';
-import { format } from '../../../lib/format-omeganum';
+import {
+    getDimensionsMultiplier,
+    getDimensionsAmount,
+    getDimensionsCost,
+    buyable,
+    buyDimensions,
+    buyAllDim
+} from '../../../game/dimensions/dimensions'
+import { usePlayerData } from '../../../lib/composables/usePlayerData'
+import { format } from '../../../lib/format-omeganum'
 
 const A1to8 = [1, 2, 3, 4, 5, 6, 7, 8]
-const randomerPl = usePlayerData((player)=>player.randomer);
+const randomerPl = usePlayerData((player) => player.randomer)
+getDimensionsMultiplier(1)
 </script>
 
 <template>
+    <div class="text-center">
+        <button class="btn" @click="buyAllDim()">购买最大</button>
+    </div>
     <div v-for="dim in A1to8" :key="dim" class="text-center">
-        第{{dim}}维度&nbsp;+{{ format(getDimensionsAmount(dim-1)) }}&nbsp;×{{ format(getDimensionsMultiplier(dim-1)) }}&nbsp;^1.0000&nbsp;
-        <button class="btn" :disabled="!buyable(dim-1)" @click="buyDimensions(dim-1)">
-            价格: {{ format(getDimensionsCost(dim-1)) }} mm<sup>4</sup>
+        第{{ dim }}维度&nbsp;+{{ format(getDimensionsAmount(dim - 1)) }}&nbsp;×{{
+            format(getDimensionsMultiplier(dim - 1))
+        }}&nbsp;^1.0000&nbsp;
+        <button class="btn" :disabled="!buyable(dim - 1)" @click="buyDimensions(dim - 1)">
+            价格: {{ format(getDimensionsCost(dim - 1)) }} mm<sup>4</sup>
         </button>
         <!-- <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">
                 Cost: <span v-html="format(player.dimensions[DIMENSIONS_COST][dim.id
@@ -25,5 +38,4 @@ const randomerPl = usePlayerData((player)=>player.randomer);
     <span style="display: none">{{ randomerPl }}</span>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

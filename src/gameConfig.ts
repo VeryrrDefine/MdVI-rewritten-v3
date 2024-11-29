@@ -1,3 +1,3 @@
 export default {
-    gameId: "MDVI-rew-3"
+    gameId: 'MDVI-rew-3'
 }

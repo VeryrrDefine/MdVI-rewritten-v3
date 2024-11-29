@@ -1,19 +1,21 @@
-import { DC } from "./constants";
+import { DC } from './constants'
 
 export const initialPlayer = () => ({
-    volumes: DC.D0,
-    options: {
-    },
+    volumes: DC.D10,
+    options: {},
 
     lastTick: Date.now(),
     currentPage: 1,
-    randomer: "把河列啊？",
+    randomer: 'parler à?',
     dimensions: {
         amounts: [...Array(8).fill(DC.D0)],
-        bought: [...Array(8).fill(DC.D0)],
-    }
-});
+        bought: [...Array(8).fill(DC.D0)]
+    },
 
-export type Player = ReturnType<typeof initialPlayer>;
+    PL1pts: DC.D0,
+    hasUnlockedPL1: false,
+})
 
-export const player = initialPlayer();
+export type Player = ReturnType<typeof initialPlayer>
+
+export const player = initialPlayer()

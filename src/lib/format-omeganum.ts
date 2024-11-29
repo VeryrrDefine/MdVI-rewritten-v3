@@ -1,4 +1,4 @@
-import OmegaNum from 'omega_num.js';
+import OmegaNum from 'omega_num.js'
 
 // format-omeganum.js by cloudytheconqueror
 // Code snippets from NumberFormating.js of ducdat0507's The Communitree,
@@ -14,161 +14,174 @@ const FORMAT_DEBUG = 0
 const MAX_LOGP1_REPEATS = 48
 
 export interface omeganumarray {
-    0: number,
+    0: number
     1: number
 }
 
-function commaFormat(num : any, precision : number = 4):string {
-    if (num === null || num === undefined) return "NaN"
+function commaFormat(num: any, precision: number = 4): string {
+    if (num === null || num === undefined) return 'NaN'
     const zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
     const init = num.toString()
-    const portions = init.split(".")
-    portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+    const portions = init.split('.')
+    portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')
     return portions[0]
 }
 
-function regularFormat(num : any, precision : number = 4):string {
-    if (isNaN(num)) return "NaN"
+function regularFormat(num: any, precision: number = 4): string {
+    if (isNaN(num)) return 'NaN'
     const zeroCheck = num.array ? num.array[0] : num
     if (zeroCheck < 0.001) return (0).toFixed(precision)
     const fmt = num.toString()
-    const f = fmt.split(".")
+    const f = fmt.split('.')
     if (precision == 0) return commaFormat(num.floor ? num.floor() : Math.floor(num))
-    else if (f.length == 1) return fmt + "." + "0".repeat(precision)
-    else if (f[1].length < precision) return fmt + "0".repeat(precision - f[1].length)
-    else return f[0] + "." + f[1].substring(0, precision)
+    else if (f.length == 1) return fmt + '.' + '0'.repeat(precision)
+    else if (f[1].length < precision) return fmt + '0'.repeat(precision - f[1].length)
+    else return f[0] + '.' + f[1].substring(0, precision)
 }
 
 // Basically does the opposite of what standardize in OmegaNum does
 // Set smallTop to true to force the top value in the result below 10
-function polarize(array: any, smallTop=false) {
-    if (FORMAT_DEBUG >= 1) console.log("Begin polarize: "+JSON.stringify(array)+", smallTop "+smallTop)
+function polarize(array: any, smallTop = false) {
+    if (FORMAT_DEBUG >= 1)
+        console.log('Begin polarize: ' + JSON.stringify(array) + ', smallTop ' + smallTop)
     if (array.length == 0) array = [0]
-    
-    let bottom = array[0], top = 0, height = 0
-    if (!Number.isFinite(array[0])) {}
-    else if (array.length <= 1) {
+
+    let bottom = array[0],
+        top = 0,
+        height = 0
+    // if (!Number.isFinite(array[0])) {}
+    if (array.length <= 1) {
         while (smallTop && bottom >= 10) {
             bottom = Math.log10(bottom)
             top += 1
             height = 1
         }
-    }
-    else {
+    } else {
         top = array[1]
         height = 1
-        while (bottom >= 10 || height < array.length-1 || (smallTop && top >= 10)) {
-            if (bottom >= 10) { // Bottom mode: the bottom number "climbs" to the top
+        while (bottom >= 10 || height < array.length - 1 || (smallTop && top >= 10)) {
+            if (bottom >= 10) {
+                // Bottom mode: the bottom number "climbs" to the top
                 if (height == 1) {
                     // Apply one increment
                     bottom = Math.log10(bottom)
-                    if (bottom >= 10) { // Apply increment again if necessary
+                    if (bottom >= 10) {
+                        // Apply increment again if necessary
                         bottom = Math.log10(bottom)
                         top += 1
                     }
-                }
-                else if (height < MAX_LOGP1_REPEATS) {
+                } else if (height < MAX_LOGP1_REPEATS) {
                     // Apply the first two increments (one or two logs on first, one log on second)
                     if (bottom >= 1e10) bottom = Math.log10(Math.log10(Math.log10(bottom))) + 2
                     else bottom = Math.log10(Math.log10(bottom)) + 1
                     // Apply the remaining increments
-                    for (let i=2;i<height;i++) bottom = Math.log10(bottom) + 1
-                }
-                else bottom = 1 // The increment result is indistinguishable from 1
-                
+                    for (let i = 2; i < height; i++) bottom = Math.log10(bottom) + 1
+                } else bottom = 1 // The increment result is indistinguishable from 1
+
                 top += 1
-                if (FORMAT_DEBUG >= 1) console.log("Bottom mode: bottom "+bottom+", top "+top+", height "+height)
-            }
-            else { // Top mode: height is increased by one
+                if (FORMAT_DEBUG >= 1)
+                    console.log(
+                        'Bottom mode: bottom ' + bottom + ', top ' + top + ', height ' + height
+                    )
+            } else {
+                // Top mode: height is increased by one
                 bottom = Math.log10(bottom) + top
                 height += 1
-                top = (array[height]||0) + 1
-                if (FORMAT_DEBUG >= 1) console.log("Top mode: bottom "+bottom+", top "+top+", height "+height)
+                top = (array[height] || 0) + 1
+                if (FORMAT_DEBUG >= 1)
+                    console.log(
+                        'Top mode: bottom ' + bottom + ', top ' + top + ', height ' + height
+                    )
             }
         }
     }
-    
-    if (FORMAT_DEBUG >= 1) console.log("Polarize result: bottom "+bottom+", top "+top+", height "+height)
-    return {bottom: bottom, top: top, height: height}
+
+    if (FORMAT_DEBUG >= 1)
+        console.log('Polarize result: bottom ' + bottom + ', top ' + top + ', height ' + height)
+    return { bottom: bottom, top: top, height: height }
 }
 
-export function format(num : any, precision:number=4,  small=false):string {
-    if (OmegaNum.isNaN(num)) return "NaN"
+export function format(num: any, precision: number = 4, small = false): string {
+    if (OmegaNum.isNaN(num)) return 'NaN'
     const precision2 = Math.max(3, precision) // for e
     const precision3 = Math.max(4, precision) // for F, G, H
     const precision4 = Math.max(6, precision) // for J
     num = new OmegaNum(num)
     const array = num.array
     if (num.abs().lt(1e-308)) return (0).toFixed(precision)
-    if (num.sign < 0) return "-" + format(num.neg(), precision)
-    if (num.isInfinite()) return "Infinity"
-    if (num.lt("0.0001")) { return format(num.rec(), precision) + "⁻¹" }
-    else if (num.lt(1)) return regularFormat(num, precision + (small ? 2 : 0))
+    if (num.sign < 0) return '-' + format(num.neg(), precision)
+    if (num.isInfinite()) return 'Infinity'
+    if (num.lt('0.0001')) {
+        return format(num.rec(), precision) + '⁻¹'
+    } else if (num.lt(1)) return regularFormat(num, precision + (small ? 2 : 0))
     else if (num.lt(1000)) return regularFormat(num, precision)
     else if (num.lt(1e9)) return commaFormat(num)
-    else if (num.lt("10^^5")) { // 1e9 ~ 1F5
-        let rep = (array[1]||0)-1
+    else if (num.lt('10^^5')) {
+        // 1e9 ~ 1F5
+        let rep = (array[1] || 0) - 1
         if (array[0] >= 1e9) {
             array[0] = Math.log10(array[0])
             rep += 1
         }
-        const m = 10**(array[0]-Math.floor(array[0]))
+        const m = 10 ** (array[0] - Math.floor(array[0]))
         const e = Math.floor(array[0])
         const p = array[0] < 1000 ? precision2 : 0
-        return "e".repeat(rep) + regularFormat(m, p) + "e" + commaFormat(e)
-    }
-    else if (num.lt("10^^1000000")) { // 1F5 ~ F1,000,000
+        return 'e'.repeat(rep) + regularFormat(m, p) + 'e' + commaFormat(e)
+    } else if (num.lt('10^^1000000')) {
+        // 1F5 ~ F1,000,000
         const pol = polarize(array)
-        return regularFormat(pol.bottom, precision3) + "F" + commaFormat(pol.top)
-    }
-    else if (num.lt("10^^^5")) { // F1,000,000 ~ 1G5
-        if ((array[2]||0) >= 1) {
+        return regularFormat(pol.bottom, precision3) + 'F' + commaFormat(pol.top)
+    } else if (num.lt('10^^^5')) {
+        // F1,000,000 ~ 1G5
+        if ((array[2] || 0) >= 1) {
             const rep = array[2]
             array[2] = 0
-            return "F".repeat(rep) + format(array, precision)
+            return 'F'.repeat(rep) + format(array, precision)
         }
         let n = array[1] + 1
-        if (num.gte("10^^" + (n + 1))) n += 1
-        return "F" + format(n, precision)
-    }
-    else if (num.lt("10^^^1000000")) { // 1G5 ~ G1,000,000
+        if (num.gte('10^^' + (n + 1))) n += 1
+        return 'F' + format(n, precision)
+    } else if (num.lt('10^^^1000000')) {
+        // 1G5 ~ G1,000,000
         const pol = polarize(array)
-        return regularFormat(pol.bottom, precision3) + "G" + commaFormat(pol.top)
-    }
-    else if (num.lt("10^^^^5")) { // G1,000,000 ~ 1H5
-        if ((array[3]||0) >= 1) {
+        return regularFormat(pol.bottom, precision3) + 'G' + commaFormat(pol.top)
+    } else if (num.lt('10^^^^5')) {
+        // G1,000,000 ~ 1H5
+        if ((array[3] || 0) >= 1) {
             const rep = array[3]
             array[3] = 0
-            return "G".repeat(rep) + format(array, precision)
+            return 'G'.repeat(rep) + format(array, precision)
         }
         let n = array[2] + 1
-        if (num.gte("10^^^" + (n + 1))) n += 1
-        return "G" + format(n, precision)
-    }
-    else if (num.lt("10^^^^1000000")) { // 1H5 ~ H1,000,000
+        if (num.gte('10^^^' + (n + 1))) n += 1
+        return 'G' + format(n, precision)
+    } else if (num.lt('10^^^^1000000')) {
+        // 1H5 ~ H1,000,000
         const pol = polarize(array)
-        return regularFormat(pol.bottom, precision3) + "H" + commaFormat(pol.top)
-    }
-    else if (num.lt("10^^^^^5")) { // H1,000,000 ~ 5J4
-        if ((array[4]||0) >= 1) {
+        return regularFormat(pol.bottom, precision3) + 'H' + commaFormat(pol.top)
+    } else if (num.lt('10^^^^^5')) {
+        // H1,000,000 ~ 5J4
+        if ((array[4] || 0) >= 1) {
             const rep = array[4]
             array[4] = 0
-            return "H".repeat(rep) + format(array, precision)
+            return 'H'.repeat(rep) + format(array, precision)
         }
         let n = array[3] + 1
-        if (num.gte("10^^^^" + (n + 1))) n += 1
-        return "H" + format(n, precision)
+        if (num.gte('10^^^^' + (n + 1))) n += 1
+        return 'H' + format(n, precision)
     }
     // 5J4 and beyond
     const pol = polarize(array, true)
-    return regularFormat(Math.log10(pol.bottom) + pol.top, precision4) + "J" + commaFormat(pol.height)
+    return (
+        regularFormat(Math.log10(pol.bottom) + pol.top, precision4) + 'J' + commaFormat(pol.height)
+    )
 }
 
-export function formatWhole(num: any):string {
+export function formatWhole(num: any): string {
     return format(num, 0)
 }
 
-export function formatSmall(num: any, precision:number=4):string { 
-    return format(num, precision, true)    
+export function formatSmall(num: any, precision: number = 4): string {
+    return format(num, precision, true)
 }
