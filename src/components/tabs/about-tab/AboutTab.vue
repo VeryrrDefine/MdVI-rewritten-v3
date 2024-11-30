@@ -3,7 +3,7 @@
 <template>
     <div class="text-center">
         作者:VeryrrDefine<br />
-        当前版本： 3.1.0<br />
+        当前版本： 3.1.1<br />
 
         <p>支持所有序数增量吧吧友和PEIT AD群友，点击下面玩其他人制作的游戏</p>
         <a href="https://seanxlx2011.github.io/" target="_blank">数据增量重置版</a>,

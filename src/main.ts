@@ -11,9 +11,6 @@ import { format, formatWhole, formatSmall } from '@/lib/format-omeganum'
 import './style.css'
 import './style2.scss'
 
-
-
-
 createApp(App).mount('#app')
 
 load()

@@ -1,5 +1,6 @@
 import OmegaNum from 'omega_num.js'
 import { DC } from '../constants'
+import { hasMM3upgrade } from '../mm3-upgrades'
 import { player } from '../player'
 
 // all these id 0-7;
@@ -7,7 +8,6 @@ export function getDimensionsScale(id: number) {
     return OmegaNum.pow(DC.D10, id + 1)
 }
 export function buyDimensions(id: number) {
-
     if (player.volumes.gte(getDimensionsCost(id))) {
         const dimscale = getDimensionsScale(id)
         const temp1 = player.volumes.logBase(dimscale)
@@ -24,9 +24,9 @@ export function buyDimensions(id: number) {
     }
 }
 
-export function buyAllDim(){
-    for (let i=0;i<8;i++){
-        if (buyable(i)) buyDimensions(i);
+export function buyAllDim() {
+    for (let i = 0; i < 8; i++) {
+        if (buyable(i)) buyDimensions(i)
     }
 }
 
@@ -48,8 +48,8 @@ export function getDimensionsBuy10Multiplier() {
 }
 
 export function getDimensionsMultiplier(id: number) {
-    let temp1 = DC.D2.pow(getDimensionsBought(id))
-
+    let temp1 = getDimensionsBuy10Multiplier().pow(getDimensionsBought(id))
+    if (hasMM3upgrade(1)) temp1 = temp1.mul(player.PL1pts.add(1).pow(2))
     return temp1
 }
 export function getDimensionsCost(id: number) {
@@ -59,13 +59,20 @@ export function dimensionLoop(diff: number) {
     if (player.volumes.lt(DC.D10) && getDimensionsAmount(0).eq(DC.D0)) {
         player.volumes = DC.D10
     }
-    
+
     for (let i = 0; i < 7; i++) {
         player.dimensions.amounts[i] = player.dimensions.amounts[i].add(
             getDimensionsMultiplier(i + 1)
                 .mul(getDimensionsAmount(i + 1))
                 .mul(diff)
         )
+    }
+    for (let i = 0; i < 8; i++) {
+        if (player.automations.includes(i)) {
+            if (buyable(i)) {
+                buyDimensions(i)
+            }
+        }
     }
     player.volumes = player.volumes.add(
         getDimensionsAmount(0).mul(getDimensionsMultiplier(0)).mul(diff)

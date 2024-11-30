@@ -552,21 +552,3 @@ table {
     justify-content: center;
     flex-flow: row wrap;
 }
-
-
-.mm3{
-    background-color: #440;
-    border-color: #880;
-}
-.mm3:hover{
-    background-color: #550;
-    border-color: #aa0;
-}
-.mm3[disabled]{
-    background-color: #220;
-    border-color: #440;
-}
-.mm3text{ 
-    color: #dd0;
-}
-

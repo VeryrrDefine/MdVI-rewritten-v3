@@ -19,6 +19,7 @@ export const DC = deepFreeze({
     D0: new OmegaNum(0),
     D1: new OmegaNum(1),
     D2: new OmegaNum(2),
+    D3: new OmegaNum(3),
     D7: new OmegaNum(7),
     D10: new OmegaNum(10),
     D1E20: new OmegaNum(1e20),

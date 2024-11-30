@@ -1,11 +1,107 @@
-.PL1button{
-    width:  160px;
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:math';
+
+.PLbuttonbase {
+    width: 160px;
     height: 80px;
     position: absolute;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.PL1button {
+    @extend .PLbuttonbase;
     top: 64px;
     left: 16px;
     background-color: #888800;
-    color: #ffffff;
     border: 1px solid #aaaa00;
+}
+.upgbase {
+    width: 184px;
+    height: 136px;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 16px;
+    text-decoration: none;
     cursor: pointer;
+}
+$PLbtnColors: #055, #505, #005, #500, #050, #50a;
+
+@for $i from 2 through 7 {
+    .PL#{$i}button {
+        @extend .PLbuttonbase;
+        @if $i%2==0 {
+            right: 16px;
+        }
+        @if $i%2!=0 {
+            left: 16px;
+        }
+        top: calc(64px + 96px * math.floor(math.div($i - 1, 2)));
+        background-color: color.adjust(list.nth($PLbtnColors, $i - 1), $lightness: 10%);
+        border: 1px
+            solid
+            color.adjust(list.nth($PLbtnColors, $i - 1), $lightness: 16.6666666666666666666666%);
+    }
+}
+/*
+@debug  color.adjust(#055, $lightness: 6.6666666666666666%);
+@debug  color.adjust(#055, $lightness: 16.666666666666666%);
+@debug  color.adjust(#055, $lightness: -6.6666666666666666%);
+@debug  color.adjust(#055, $lightness: 26.6666666666666666%);
+@debug  color.adjust(#055, $lightness: -10%);
+*/
+@for $i from 1 through list.length($PLbtnColors) {
+    .mm#{$i + 4} {
+        $color: list.nth($PLbtnColors, $i);
+        background-color: $color;
+        border-color: color.adjust($color, $lightness: 6.6666666666666666%);
+        &:hover {
+            background-color: color.adjust($color, $lightness: 6.666666666666666%);
+            border-color: color.adjust($color, $lightness: 13.333333333333333%);
+        }
+        &:disabled {
+            background-color: color.adjust($color, $lightness: -6.6666666666666666%);
+            border-color: color.adjust($color, $lightness: -10%);
+        }
+    }
+    .mm#{$i + 4}text {
+        color: color.adjust(list.nth($PLbtnColors, $i), $lightness: 26.6666666666666666%);
+    }
+    .mm#{$i + 4}upg {
+        @extend .upgbase;
+        border: 2px solid color.adjust(list.nth($PLbtnColors, $i), $lightness: 30%);
+    }
+    .mm#{$i + 4}upgyes {
+        @extend .upgbase;
+        border: 2px solid color.adjust(list.nth($PLbtnColors, $i), $lightness: 30%);
+        background-color: #0a0;
+    }
+}
+
+.mm3 {
+    $color: #550;
+    background-color: $color;
+    border-color: color.adjust($color, $lightness: 6.6666666666666666%);
+    &:hover {
+        background-color: color.adjust($color, $lightness: 6.666666666666666%);
+        border-color: color.adjust($color, $lightness: 13.333333333333333%);
+    }
+    &:disabled {
+        background-color: color.adjust($color, $lightness: -6.6666666666666666%);
+        border-color: color.adjust($color, $lightness: -10%);
+    }
+}
+
+.mm3upgno {
+    @extend .upgbase;
+    border: 2px solid #ffff00;
+}
+.mm3upgyes {
+    @extend .mm3upgno;
+    background-color: #0a0;
+}
+
+.mm3text {
+    color: #dd0;
 }

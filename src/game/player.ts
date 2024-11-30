@@ -14,6 +14,8 @@ export const initialPlayer = () => ({
 
     PL1pts: DC.D0,
     hasUnlockedPL1: false,
+    PL1upgrades: [-1],
+    automations: [-1]
 })
 
 export type Player = ReturnType<typeof initialPlayer>

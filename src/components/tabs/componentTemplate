@@ -1,0 +1,11 @@
+<script setup lang="ts">
+import { usePlayerData } from '../../../lib/composables/usePlayerData'
+const randomerPl = usePlayerData((player) => player.randomer)
+</script>
+
+<template>
+    
+    <span style="display: none">{{ randomerPl }}</span>
+</template>
+
+<style scoped></style>

@@ -16,7 +16,7 @@ export const tabshow = {
     },
     mm3: {
         inTab(): boolean {
-            return [4].includes(player.currentPage);
+            return [4].includes(player.currentPage)
         },
         upgrades: {
             inTab(): boolean {
@@ -25,9 +25,8 @@ export const tabshow = {
             unlocked(): boolean {
                 return [4].includes(player.currentPage)
             }
-
         },
-        unlocked() :boolean{
+        unlocked(): boolean {
             return player.hasUnlockedPL1
         }
     },
